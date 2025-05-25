@@ -1,4 +1,7 @@
+using Application.Options;
+using Infrastructure.Options;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -10,6 +13,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<OpenWeatherMapApiOptions>(builder.Configuration.GetSection(OpenWeatherMapApiOptions.SectionName));
+builder.Services.Configure<WeatherStackApiOptions>(builder.Configuration.GetSection(WeatherStackApiOptions.SectionName));
 
 var app = builder.Build();
 
