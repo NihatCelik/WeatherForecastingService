@@ -31,9 +31,25 @@ public class OpenWeatherMapService(IHttpClientFactory httpClientFactory, IOption
         return OpenWeatherMapMapper.ToWeatherResponse(result);
     }
 
-    public Task<WeatherResponse> GetWeatherAsync(string city, DateTime? date, UnitTypes unitType)
+    public async Task<WeatherResponse> GetWeatherAsync(string city, DateTime? date, UnitTypes unitType)
     {
-        throw new NotImplementedException();
+        var url = $"{_options.BaseAddress}?appid={_options.ApiKey}&q={city}";
+        if (date.HasValue)
+        {
+            var start = new DateTimeOffset(date.Value.Date).ToUnixTimeMilliseconds();
+            var end = new DateTimeOffset(date.Value.Date.AddDays(1)).ToUnixTimeMilliseconds();
+            url = $"{_options.HistoryBaseAddress}city?q={city}&type=hour&start={start}&end={end}&appid={_options.ApiKey}";
+        }
+        if (unitType != UnitTypes.Default)
+        {
+            var unit = GetUnit(unitType);
+            url += $"&units={unit}";
+        }
+        var response = await _httpClient.GetAsync(url);
+
+        var jsonResult = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<OpenWeatherMapApiResponse>(jsonResult);
+        return OpenWeatherMapMapper.ToWeatherResponse(result);
     }
 
     private static string GetUnit(UnitTypes unitType)

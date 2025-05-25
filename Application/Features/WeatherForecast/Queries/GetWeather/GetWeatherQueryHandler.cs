@@ -10,9 +10,7 @@ public class GetWeatherQueryHandler(IWeatherService weatherService) : IRequestHa
 
     public async Task<GetWeatherResponse> Handle(GetWeatherQuery request, CancellationToken cancellationToken)
     {
-        string cacheName = $"GetCityWeather_{request.City}_{request.Date?.ToString("yyyyMMdd")}_{request.UnitType}";
         var response = await _weatherService.GetWeatherAsync(request.City, request.Date, request.UnitType);
-
         return new GetWeatherResponse
         {
             City = response.Region,
