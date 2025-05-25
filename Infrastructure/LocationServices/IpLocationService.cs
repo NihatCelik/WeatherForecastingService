@@ -9,7 +9,7 @@ public class IpLocationService(IHttpClientFactory httpClientFactory) : IIpLocati
 {
     private readonly HttpClient _httpClient = httpClientFactory.CreateClient(IpLocationApiOptions.HttpClientName);
 
-    public async Task<IpLocationResponse> GetLocation(string clientIp)
+    public async Task<IpLocationResponse> GetLocationAsync(string clientIp)
     {
         var locationUrl = $"{_httpClient.BaseAddress}{clientIp}";
 

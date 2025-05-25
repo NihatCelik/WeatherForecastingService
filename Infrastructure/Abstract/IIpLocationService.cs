@@ -4,5 +4,5 @@ namespace Infrastructure.Abstract;
 
 public interface IIpLocationService
 {
-    Task<IpLocationResponse> GetLocation(string clientIp);
+    Task<IpLocationResponse> GetLocationAsync(string clientIp);
 }
