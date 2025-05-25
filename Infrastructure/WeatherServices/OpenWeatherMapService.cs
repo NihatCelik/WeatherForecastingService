@@ -31,6 +31,11 @@ public class OpenWeatherMapService(IHttpClientFactory httpClientFactory, IOption
         return OpenWeatherMapMapper.ToWeatherResponse(result);
     }
 
+    public Task<WeatherResponse> GetWeatherAsync(string city, DateTime? date, UnitTypes unitType)
+    {
+        throw new NotImplementedException();
+    }
+
     private static string GetUnit(UnitTypes unitType)
     {
         return unitType switch

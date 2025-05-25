@@ -31,6 +31,26 @@ public class WeatherStackService(IHttpClientFactory httpClientFactory, IOptions<
         return WeatherStackMapper.ToWeatherResponse(result);
     }
 
+    public async Task<WeatherResponse> GetWeatherAsync(string city, DateTime? date, UnitTypes unitType)
+    {
+        var url = $"{_options.BaseAddress}?access_key={_options.ApiKey}&query={city}";
+        if (date.HasValue)
+        {
+            url = $"{_options.HistoryBaseAddress}?access_key={_options.ApiKey}&query={city}&type=hourly&historical_date={date.Value.Date:yyyy-MM-dd}";
+        }
+        if (unitType != UnitTypes.Default)
+        {
+            var unit = GetUnit(unitType);
+            url += $"&units={unit}";
+        }
+        var response = await _httpClient.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+
+        var jsonResult = await response.Content.ReadAsStringAsync();
+        var result = JsonConvert.DeserializeObject<WeatherStackApiResponse>(jsonResult);
+        return WeatherStackMapper.ToWeatherResponse(result);
+    }
+
     private static string GetUnit(UnitTypes unitType)
     {
         return unitType switch
