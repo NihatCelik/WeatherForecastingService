@@ -19,10 +19,11 @@ builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBeh
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(GetCurrentWeatherQueryHandler).Assembly));
 
+builder.Services.AddMemoryCache();
+builder.Services.AddCustomRateLimiting();
 builder.AddExternalHttpClientServices();
 builder.AddOptions();
 builder.Services.AddAppServices();
-builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
@@ -37,6 +38,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.UseHttpsRedirection();
+
+app.UseRateLimiter();
 
 app.UseAuthorization();
 

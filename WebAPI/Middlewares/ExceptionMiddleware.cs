@@ -28,6 +28,17 @@ public class ExceptionMiddleware(ILogger<ExceptionMiddleware> logger) : IMiddlew
             if (!context.Response.HasStarted)
                 await context.Response.WriteAsJsonAsync(errorDetails);
         }
+        catch (IpRateLimitException ex)
+        {
+            context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
+            context.Response.ContentType = "application/json";
+            logger.LogWarning(ex, "IpRateLimit exception!");
+            await context.Response.WriteAsJsonAsync(new
+            {
+                error = ex.Message,
+                status = context.Response.StatusCode
+            });
+        }
         catch (CityNotFoundException ex)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
