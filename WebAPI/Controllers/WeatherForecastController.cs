@@ -1,5 +1,5 @@
-using Application.Features.WeatherForecast.Queries.GetCityWeather;
 using Application.Features.WeatherForecast.Queries.GetCurrentWeather;
+using Application.Features.WeatherForecast.Queries.GetWeather;
 using Infrastructure.Enums;
 using Microsoft.AspNetCore.Mvc;
 

@@ -14,6 +14,7 @@ builder.Services.AddMediatR(cfg =>
 builder.AddExternalHttpClientServices();
 builder.AddOptions();
 builder.Services.AddAppServices();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

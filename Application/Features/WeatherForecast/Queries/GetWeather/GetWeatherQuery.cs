@@ -1,7 +1,7 @@
 ﻿using Infrastructure.Enums;
 using MediatR;
 
-namespace Application.Features.WeatherForecast.Queries.GetCityWeather;
+namespace Application.Features.WeatherForecast.Queries.GetWeather;
 
 public class GetWeatherQuery : IRequest<GetWeatherResponse>
 {
