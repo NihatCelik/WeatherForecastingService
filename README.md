@@ -9,13 +9,13 @@
 - **ASP.NET Core 8**
 - **C# 12**
 - **RESTful API Design**
-- **Swagger / OpenAPI** (API documentation)
+- **Swagger** (API documentation)
 - **Serilog** (Logging to Elasticsearch + visualization via Kibana)
 - **MediatR** (CQRS pattern)
 - **FluentValidation** (Robust request validation)
 - **Custom Exception Middleware** (Centralized error handling)
 - **IpRateLimit** (Rate limiting per IP)
-- **Caching** (In-memory and/or distributed caching)
+- **Caching** (In-memory)
 - **xUnit / Moq** (Unit & integration testing)
 - **Docker / Docker Compose**
 
@@ -38,10 +38,10 @@
 ### Running Locally
 
 ```bash
-git clone https://github.com/your-username/weather-api.git
-cd weather-api
+git clone https://github.com/your-username/WeatherForecastingService.git
+cd WeatherForecastingService
 dotnet build
-dotnet run --project src/Weather.Api
+dotnet run --project src/WeatherForecastingService.WebAPI
 ```
 ### Running with Docker
 ```
