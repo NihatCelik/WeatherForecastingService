@@ -13,6 +13,17 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var origins = builder.Configuration.GetSection("AllowedOrigins").Get<string>();
+builder.Services.AddCors(options =>
+{
+    var originValues = origins.Split(";");
+    options.AddPolicy("AllowOrigin",
+        builder => builder
+        .AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithOrigins(originValues));
+});
+
 builder.Services.AddValidatorsFromAssemblyContaining<GetWeatherRequestValidator>();
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
