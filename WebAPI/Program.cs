@@ -4,6 +4,7 @@ using MediatR.Extensions.FluentValidation.AspNetCore;
 using MediatR;
 using WebAPI.ServiceCollectionExtensions;
 using Application.Features.WeatherForecast.ValidationRules;
+using WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseHttpsRedirection();
 

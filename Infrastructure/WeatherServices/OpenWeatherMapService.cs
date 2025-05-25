@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Exceptions;
+using Domain.Models;
 using Infrastructure.Abstract;
 using Infrastructure.Enums;
 using Infrastructure.Mapping;
@@ -23,12 +24,7 @@ public class OpenWeatherMapService(IHttpClientFactory httpClientFactory, IOption
             url += $"&units={unit}";
         }
 
-        var response = await _httpClient.GetAsync(url);
-        response.EnsureSuccessStatusCode();
-
-        var jsonResult = await response.Content.ReadAsStringAsync();
-        var result = JsonConvert.DeserializeObject<OpenWeatherMapApiResponse>(jsonResult);
-        return OpenWeatherMapMapper.ToWeatherResponse(result);
+        return await GetApiResponse(url);
     }
 
     public async Task<WeatherResponse> GetWeatherAsync(string city, DateTime? date, UnitTypes unitType)
@@ -45,7 +41,25 @@ public class OpenWeatherMapService(IHttpClientFactory httpClientFactory, IOption
             var unit = GetUnit(unitType);
             url += $"&units={unit}";
         }
+        return await GetApiResponse(url, city);
+    }
+
+    private async Task<WeatherResponse> GetApiResponse(string url, string city = "")
+    {
         var response = await _httpClient.GetAsync(url);
+        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        {
+            throw new CityNotFoundException(city);
+        }
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            throw new UnauthorizedAccessAppException("OpenWeatherMap");
+        }
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new OpenWeatherMapServiceException($"OpenWeatherMapService API error: Content: {errorContent}", response.StatusCode.GetHashCode());
+        }
 
         var jsonResult = await response.Content.ReadAsStringAsync();
         var result = JsonConvert.DeserializeObject<OpenWeatherMapApiResponse>(jsonResult);
