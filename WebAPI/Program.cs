@@ -1,20 +1,19 @@
-using Application.Options;
-using Infrastructure.Options;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Application.Features.WeatherForecast.Queries.GetCurrentWeather;
+using WebAPI.ServiceCollectionExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.Configure<OpenWeatherMapApiOptions>(builder.Configuration.GetSection(OpenWeatherMapApiOptions.SectionName));
-builder.Services.Configure<WeatherStackApiOptions>(builder.Configuration.GetSection(WeatherStackApiOptions.SectionName));
+builder.Services.AddMediatR(cfg =>
+    cfg.RegisterServicesFromAssembly(typeof(GetCurrentWeatherQueryHandler).Assembly));
+
+builder.AddExternalHttpClientServices();
+builder.AddOptions();
+builder.Services.AddAppServices();
 
 var app = builder.Build();
 
